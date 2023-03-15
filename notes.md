@@ -1,0 +1,20 @@
+- Game Server <-> Server that interacts with blockchain
+- Game Server listens to Server that interacts with blockchain for players labeled as cheating
+- Options
+  - 1 - Ethereum?
+    - Each player is associated with a smart contract
+    - That smart contract implements game state validation logic
+    - If validation fails, set flag that failed
+    - Main smart contract stores all player smart contracts
+    - Server communicates with this smart contract to get info
+  - 2 - Corda?
+    - Each player is associated with a node
+    - Game state is stored on blockchain
+    - Custom consensus algorithm that checks game state
+- Expose REST API on Server for blockchain
+  - APIs for
+    - Configuring new blockchains/game sessions
+    - Starting game session
+    - Defining Game Actions, which map to defining smart contract functions
+    - Querying player status e.g. is banned or not?
+    - Ending game session
