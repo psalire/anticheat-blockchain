@@ -2,15 +2,11 @@
 pragma solidity >=0.4.22 <0.9.0;
 
 library ValidationRulesLib {
-    struct SessionIntValidationRule {
+    struct IntValidationRule {
         int val;
         string operand;
     }
-    struct SessionBoolValidationRule {
-        bool val;
-        string operand;
-    }
-    struct SessionStringValidationRule {
+    struct StringValidationRule {
         string val;
         string operand;
     }

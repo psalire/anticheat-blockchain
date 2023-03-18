@@ -29,7 +29,7 @@ contract SessionHandler {
     function get_player(string memory player_id) public view returns (address) {
         address player_addr = players[player_id];
         if (player_addr == address(0x0)) {
-            revert("Player not found.");
+            revert("Player DNE");
         }
         return players[player_id];
     }
@@ -37,7 +37,7 @@ contract SessionHandler {
     function get_session(string memory session_id) public view returns (address) {
         address session_addr = game_sessions[session_id];
         if (session_addr == address(0x0)) {
-            revert("Session not found.");
+            revert("Session DNE");
         }
         return session_addr;
     }

@@ -1,6 +1,7 @@
 const AntiCheatContract = artifacts.require("AntiCheat");
 // const PlayerContract = artifacts.require("Player");
 const SessionContract = artifacts.require("Session");
+const DataHandlerContract = artifacts.require("DataHandler");
 // const OperandsLib = artifacts.require("OperandsLib");
 const ValidationRulesLib = artifacts.require("ValidationRulesLib");
 const ValidationLib = artifacts.require("ValidationLib");
@@ -12,9 +13,11 @@ module.exports = function(_deployer) {
     _deployer.deploy(ValidationLib);
     // _deployer.link(OperandsLib, SessionContract);
     _deployer.link(ValidationRulesLib, ValidationLib);
-    _deployer.link(ValidationRulesLib, SessionContract);
+    // _deployer.link(ValidationRulesLib, SessionContract);
+    _deployer.link(ValidationRulesLib, DataHandlerContract);
     _deployer.link(ValidationLib, SessionContract);
     _deployer.link(ValidationLib, AntiCheatContract);
+    _deployer.link(ValidationLib, DataHandlerContract);
     // _deployer.link(OperandsLib, AntiCheatContract);
     // _deployer.link(ValidationRulesLib, AntiCheatContract);
     // _deployer.link(AntiCheatContract, ValidationRulesLib);

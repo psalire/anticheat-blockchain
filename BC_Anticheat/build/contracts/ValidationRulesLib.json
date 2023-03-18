@@ -1,29 +1,29 @@
 {
   "contractName": "ValidationRulesLib",
   "abi": [],
-  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/ValidationRulesLib.sol\":\"ValidationRulesLib\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/ValidationRulesLib.sol\":{\"keccak256\":\"0x2c51ee7a5a69b77037aeb19bcd511ef8445bb093a294689d5afb605e093c7c92\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://479ea4704c737befb4e2dad9f10adfa7295211ef9c19bc1e020804519e36188b\",\"dweb:/ipfs/Qmf7MT4X41eQTSBQbbpHzPciGF5vsT1iDdtBDw7mBYXBGf\"]}},\"version\":1}",
-  "bytecode": "0x60566050600b82828239805160001a6073146043577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220594b275d87577fc81a4d37a492313a518f59f208e124822171144bad91405a6364736f6c63430008110033",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220594b275d87577fc81a4d37a492313a518f59f208e124822171144bad91405a6364736f6c63430008110033",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.17+commit.8df45f5f\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/ValidationRulesLib.sol\":\"ValidationRulesLib\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/ValidationRulesLib.sol\":{\"keccak256\":\"0x63d93ac9e2d5b0ff4600c1f3678fc01ce2178d198d3af6c7677f524fc314dcfe\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2cc51b5b96f73bce48b6f1fe72b954577f6b1e7ebfa0d6ee0dfb31faeb73c634\",\"dweb:/ipfs/QmXCCdRVdRbu75RGLqbV7hoVoyL7k3RzwfmTsxuZso1UF3\"]}},\"version\":1}",
+  "bytecode": "0x60566050600b82828239805160001a6073146043577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220ad5b3355373665449661f0109c4dea0514f0b84be760ee2b3e175e78b9f76a5864736f6c63430008110033",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220ad5b3355373665449661f0109c4dea0514f0b84be760ee2b3e175e78b9f76a5864736f6c63430008110033",
   "immutableReferences": {},
   "generatedSources": [],
   "deployedGeneratedSources": [],
-  "sourceMap": "66:293:5:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
-  "deployedSourceMap": "66:293:5:-:0;;;;;;;;",
-  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\nlibrary ValidationRulesLib {\n    struct SessionIntValidationRule {\n        int val;\n        string operand;\n    }\n    struct SessionBoolValidationRule {\n        bool val;\n        string operand;\n    }\n    struct SessionStringValidationRule {\n        string val;\n        string operand;\n    }\n}\n",
+  "sourceMap": "66:192:6:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "66:192:6:-:0;;;;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\npragma solidity >=0.4.22 <0.9.0;\n\nlibrary ValidationRulesLib {\n    struct IntValidationRule {\n        int val;\n        string operand;\n    }\n    struct StringValidationRule {\n        string val;\n        string operand;\n    }\n}\n",
   "sourcePath": "/mnt/d/documents/blockchain-testing/BC_Anticheat/contracts/ValidationRulesLib.sol",
   "ast": {
     "absolutePath": "project:/contracts/ValidationRulesLib.sol",
     "exportedSymbols": {
       "ValidationRulesLib": [
-        1025
+        1117
       ]
     },
-    "id": 1026,
+    "id": 1118,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1009,
+        "id": 1106,
         "literals": [
           "solidity",
           ">=",
@@ -34,7 +34,7 @@
           ".0"
         ],
         "nodeType": "PragmaDirective",
-        "src": "32:32:5"
+        "src": "32:32:6"
       },
       {
         "abstract": false,
@@ -43,27 +43,27 @@
         "contractDependencies": [],
         "contractKind": "library",
         "fullyImplemented": true,
-        "id": 1025,
+        "id": 1117,
         "linearizedBaseContracts": [
-          1025
+          1117
         ],
         "name": "ValidationRulesLib",
-        "nameLocation": "74:18:5",
+        "nameLocation": "74:18:6",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
-            "canonicalName": "ValidationRulesLib.SessionIntValidationRule",
-            "id": 1014,
+            "canonicalName": "ValidationRulesLib.IntValidationRule",
+            "id": 1111,
             "members": [
               {
                 "constant": false,
-                "id": 1011,
+                "id": 1108,
                 "mutability": "mutable",
                 "name": "val",
-                "nameLocation": "145:3:5",
+                "nameLocation": "138:3:6",
                 "nodeType": "VariableDeclaration",
-                "scope": 1014,
-                "src": "141:7:5",
+                "scope": 1111,
+                "src": "134:7:6",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -71,10 +71,10 @@
                   "typeString": "int256"
                 },
                 "typeName": {
-                  "id": 1010,
+                  "id": 1107,
                   "name": "int",
                   "nodeType": "ElementaryTypeName",
-                  "src": "141:3:5",
+                  "src": "134:3:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_int256",
                     "typeString": "int256"
@@ -84,13 +84,13 @@
               },
               {
                 "constant": false,
-                "id": 1013,
+                "id": 1110,
                 "mutability": "mutable",
                 "name": "operand",
-                "nameLocation": "165:7:5",
+                "nameLocation": "158:7:6",
                 "nodeType": "VariableDeclaration",
-                "scope": 1014,
-                "src": "158:14:5",
+                "scope": 1111,
+                "src": "151:14:6",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -98,10 +98,10 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 1012,
+                  "id": 1109,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "158:6:5",
+                  "src": "151:6:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -110,53 +110,26 @@
                 "visibility": "internal"
               }
             ],
-            "name": "SessionIntValidationRule",
-            "nameLocation": "106:24:5",
+            "name": "IntValidationRule",
+            "nameLocation": "106:17:6",
             "nodeType": "StructDefinition",
-            "scope": 1025,
-            "src": "99:80:5",
+            "scope": 1117,
+            "src": "99:73:6",
             "visibility": "public"
           },
           {
-            "canonicalName": "ValidationRulesLib.SessionBoolValidationRule",
-            "id": 1019,
+            "canonicalName": "ValidationRulesLib.StringValidationRule",
+            "id": 1116,
             "members": [
               {
                 "constant": false,
-                "id": 1016,
+                "id": 1113,
                 "mutability": "mutable",
                 "name": "val",
-                "nameLocation": "232:3:5",
+                "nameLocation": "222:3:6",
                 "nodeType": "VariableDeclaration",
-                "scope": 1019,
-                "src": "227:8:5",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_bool",
-                  "typeString": "bool"
-                },
-                "typeName": {
-                  "id": 1015,
-                  "name": "bool",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "227:4:5",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_bool",
-                    "typeString": "bool"
-                  }
-                },
-                "visibility": "internal"
-              },
-              {
-                "constant": false,
-                "id": 1018,
-                "mutability": "mutable",
-                "name": "operand",
-                "nameLocation": "252:7:5",
-                "nodeType": "VariableDeclaration",
-                "scope": 1019,
-                "src": "245:14:5",
+                "scope": 1116,
+                "src": "215:10:6",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -164,49 +137,10 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 1017,
+                  "id": 1112,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "245:6:5",
-                  "typeDescriptions": {
-                    "typeIdentifier": "t_string_storage_ptr",
-                    "typeString": "string"
-                  }
-                },
-                "visibility": "internal"
-              }
-            ],
-            "name": "SessionBoolValidationRule",
-            "nameLocation": "191:25:5",
-            "nodeType": "StructDefinition",
-            "scope": 1025,
-            "src": "184:82:5",
-            "visibility": "public"
-          },
-          {
-            "canonicalName": "ValidationRulesLib.SessionStringValidationRule",
-            "id": 1024,
-            "members": [
-              {
-                "constant": false,
-                "id": 1021,
-                "mutability": "mutable",
-                "name": "val",
-                "nameLocation": "323:3:5",
-                "nodeType": "VariableDeclaration",
-                "scope": 1024,
-                "src": "316:10:5",
-                "stateVariable": false,
-                "storageLocation": "default",
-                "typeDescriptions": {
-                  "typeIdentifier": "t_string_storage_ptr",
-                  "typeString": "string"
-                },
-                "typeName": {
-                  "id": 1020,
-                  "name": "string",
-                  "nodeType": "ElementaryTypeName",
-                  "src": "316:6:5",
+                  "src": "215:6:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -216,13 +150,13 @@
               },
               {
                 "constant": false,
-                "id": 1023,
+                "id": 1115,
                 "mutability": "mutable",
                 "name": "operand",
-                "nameLocation": "343:7:5",
+                "nameLocation": "242:7:6",
                 "nodeType": "VariableDeclaration",
-                "scope": 1024,
-                "src": "336:14:5",
+                "scope": 1116,
+                "src": "235:14:6",
                 "stateVariable": false,
                 "storageLocation": "default",
                 "typeDescriptions": {
@@ -230,10 +164,10 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 1022,
+                  "id": 1114,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
-                  "src": "336:6:5",
+                  "src": "235:6:6",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
                     "typeString": "string"
@@ -242,20 +176,20 @@
                 "visibility": "internal"
               }
             ],
-            "name": "SessionStringValidationRule",
-            "nameLocation": "278:27:5",
+            "name": "StringValidationRule",
+            "nameLocation": "184:20:6",
             "nodeType": "StructDefinition",
-            "scope": 1025,
-            "src": "271:86:5",
+            "scope": 1117,
+            "src": "177:79:6",
             "visibility": "public"
           }
         ],
-        "scope": 1026,
-        "src": "66:293:5",
+        "scope": 1118,
+        "src": "66:192:6",
         "usedErrors": []
       }
     ],
-    "src": "32:328:5"
+    "src": "32:227:6"
   },
   "compiler": {
     "name": "solc",
@@ -265,12 +199,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x8Aa5E06B445e181C70Dafa2aEf8087d4A8E8Cb6b",
-      "transactionHash": "0x3084c0e2da28fc8c04d8efe1511705dc5a8c9c1708172f8118a7eeb8d1cba18e"
+      "address": "0x9c287434f6F235f2D37c19FEC57a532b4b78125c",
+      "transactionHash": "0x7f0eba5dad0730e7e0f0ca5b01bd82302728c6a9d61437079f4c84047316c301"
     }
   },
   "schemaVersion": "3.4.11",
-  "updatedAt": "2023-03-15T06:32:55.953Z",
+  "updatedAt": "2023-03-18T07:28:55.315Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

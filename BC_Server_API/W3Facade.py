@@ -4,7 +4,7 @@ import json
 from web3 import Web3
 from web3.exceptions import ContractLogicError
 
-CONTRACT_ADDR = '0x05375aa448CC77aBd26c5407d9eF4084C77dEf04'
+CONTRACT_ADDR = '0x3440B06F0C6dE258C8ff79AEab2Db248F28ED368'
 
 
 class W3Facade:
@@ -56,37 +56,12 @@ class W3Facade:
         return True, None
 
     @contract_function
-    def update_session_data(
-        self,
-        session_id,
-        int_key, bool_key, string_key,
-        int_data, bool_data, string_data
-    ):
-        """Update session data."""
-        success, session = self.get_session(session_id, handle_exception=False)
-        if success is False:
-            return False, "Failed to retrieve session."
-        session.functions.update_session_data(
-            int_key, bool_key, string_key,
-            int_data, bool_data, string_data
-        ).transact({'from': self.account})
-        return True, None
-
-    @contract_function
     def get_int_session_data(self, session_id, key):
         """Get int session data."""
         success, session = self.get_session(session_id, handle_exception=False)
         if success is False:
             return False, "Failed to retrieve session."
-        return True, session.functions.get_session_int_data(key).call()
-
-    @contract_function
-    def get_bool_session_data(self, session_id, key):
-        """Get bool session data."""
-        success, session = self.get_session(session_id, handle_exception=False)
-        if success is False:
-            return False, "Failed to retrieve session."
-        return True, session.functions.get_session_bool_data(key).call()
+        return True, session.functions.get_int_data(key).call()
 
     @contract_function
     def get_string_session_data(self, session_id, key):
@@ -94,7 +69,7 @@ class W3Facade:
         success, session = self.get_session(session_id, handle_exception=False)
         if success is False:
             return False, "Failed to retrieve session."
-        return True, session.functions.get_session_string_data(key).call()
+        return True, session.functions.get_string_data(key).call()
 
     @contract_function
     def put_int_session_data(self, session_id, key, data):
@@ -102,20 +77,7 @@ class W3Facade:
         success, session = self.get_session(session_id, handle_exception=False)
         if success is False:
             return False, "Failed to retrieve session."
-        session.functions.update_session_int_data(
-            key, data
-        ).transact({
-            'from': self.account
-        })
-        return True, None
-
-    @contract_function
-    def put_bool_session_data(self, session_id, key, data):
-        """Put bool session data."""
-        success, session = self.get_session(session_id, handle_exception=False)
-        if success is False:
-            return False, "Failed to retrieve session."
-        session.functions.update_session_bool_data(
+        session.functions.update_int_data(
             key, data
         ).transact({
             'from': self.account
@@ -128,7 +90,7 @@ class W3Facade:
         success, session = self.get_session(session_id, handle_exception=False)
         if success is False:
             return False, "Failed to retrieve session."
-        session.functions.update_session_string_data(
+        session.functions.update_string_data(
             key, data
         ).transact({
             'from': self.account
@@ -141,20 +103,7 @@ class W3Facade:
         success, session = self.get_session(session_id, handle_exception=False)
         if success is False:
             return False, "Failed to retrieve session."
-        session.functions.add_session_int_validation_rule(
-            key, val, operand
-        ).transact({
-            'from': self.account
-        })
-        return True, None
-
-    @contract_function
-    def put_bool_session_data_validation_rule(self, session_id, key, val, operand):
-        """Put session bool validation data rule."""
-        success, session = self.get_session(session_id, handle_exception=False)
-        if success is False:
-            return False, "Failed to retrieve session."
-        session.functions.add_session_bool_validation_rule(
+        session.functions.add_int_validation_rule(
             key, val, operand
         ).transact({
             'from': self.account
@@ -167,7 +116,7 @@ class W3Facade:
         success, session = self.get_session(session_id, handle_exception=False)
         if success is False:
             return False, "Failed to retrieve session."
-        session.functions.add_session_string_validation_rule(
+        session.functions.add_string_validation_rule(
             key, val, operand
         ).transact({
             'from': self.account
@@ -180,15 +129,7 @@ class W3Facade:
         success, session = self.get_session(session_id, handle_exception=False)
         if success is False:
             return False, "Failed to retrieve session."
-        return True, session.functions.get_session_int_validation_rules(key).call()
-
-    @contract_function
-    def get_session_data_bool_validation_rules(self, session_id, key):
-        """Get session bool validation rules."""
-        success, session = self.get_session(session_id, handle_exception=False)
-        if success is False:
-            return False, "Failed to retrieve session."
-        return True, session.functions.get_session_bool_validation_rules(key).call()
+        return True, session.functions.get_int_validation_rules(key).call()
 
     @contract_function
     def get_session_data_string_validation_rules(self, session_id, key):
@@ -196,29 +137,21 @@ class W3Facade:
         success, session = self.get_session(session_id, handle_exception=False)
         if success is False:
             return False, "Failed to retrieve session."
-        return True, session.functions.get_session_string_validation_rules(key).call()
+        return True, session.functions.get_string_validation_rules(key).call()
 
     @contract_function
-    def put_validate_and_update_session_int_data(self, session_id, player_id, key, data):
+    def put_validate_and_update_session_int_data(self, session_id, key, data):
         """Put session int data while validating."""
         self.anticheat.functions.validate_and_update_session_int_data(
-            session_id, player_id, key, data
+            session_id, key, data
         ).transact({'from': self.account})
         return True, None
 
     @contract_function
-    def put_validate_and_update_session_bool_data(self, session_id, player_id, key, data):
-        """Put session bool data while validating."""
-        self.anticheat.functions.validate_and_update_session_bool_data(
-            session_id, player_id, key, data
-        ).transact({'from': self.account})
-        return True, None
-
-    @contract_function
-    def put_validate_and_update_session_string_data(self, session_id, player_id, key, data):
+    def put_validate_and_update_session_string_data(self, session_id, key, data):
         """Put session string data while validating."""
         self.anticheat.functions.validate_and_update_session_string_data(
-            session_id, player_id, key, data
+            session_id, key, data
         ).transact({'from': self.account})
         return True, None
 
