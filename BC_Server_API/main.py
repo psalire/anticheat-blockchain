@@ -124,6 +124,27 @@ def get_session_data(session_id: str, data_type: Literal['int','str'], key: str,
     return SuccessResponseModel(data=msg)
 
 
+@app.get("/session/{session_id}/player/{player_id}/data/{data_type}/{key}")
+def get_player_data(
+    session_id: str,
+    player_id: str,
+    data_type: Literal['int','str'],
+    key: str,
+    response: Response
+):
+    """Get player data."""
+    if data_type == 'int':
+        success, msg = api.get_int_player_data(session_id, player_id, key) 
+    elif data_type == 'str':
+        success, msg = api.get_string_player_data(session_id, player_id, key)
+    else:
+        success, msg = False, 'Invalid data_type.'
+    if success is False:
+        response.status_code = 400
+        return ErrorResponseModel(error=msg)
+    return SuccessResponseModel(data=msg)
+
+
 @app.put("/session/{session_id}/rule/{data_type}/{key}")
 def put_session_data_validation_rule(
     session_id: str,
@@ -146,7 +167,6 @@ def put_session_data_validation_rule(
     if success is False:
         response.status_code = 400
         return ErrorResponseModel(error=msg)
-    print(msg)
     return SuccessResponseModel(data=msg)
 
 
@@ -166,6 +186,33 @@ def put_validate_and_update_session_data(
     elif data_type == 'str':
         success, msg = api.put_validate_and_update_session_string_data(
             session_id, key, [str(x) for x in data.data]
+        )
+    else:
+        success, msg = False, 'Invalid data_type.'
+    if success is False:
+        response.status_code = 400
+        return ErrorResponseModel(error=msg)
+    print(msg)
+    return SuccessResponseModel(data=msg)
+
+
+@app.put("/session/{session_id}/player/{player_id}/data/{data_type}/{key}/validate")
+def put_validate_and_update_player_data(
+    session_id: str,
+    player_id: str,
+    data_type: Literal['int','str'],
+    key: str,
+    data: PutSessionData,
+    response: Response
+):
+    """Put session data and validate."""
+    if data_type == 'int':
+        success, msg = api.put_validate_and_update_player_int_data(
+            session_id, player_id, key, data.data
+        )
+    elif data_type == 'str':
+        success, msg = api.put_validate_and_update_player_string_data(
+            session_id, player_id, key, [str(x) for x in data.data]
         )
     else:
         success, msg = False, 'Invalid data_type.'

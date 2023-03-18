@@ -4,7 +4,7 @@ import json
 from web3 import Web3
 from web3.exceptions import ContractLogicError
 
-CONTRACT_ADDR = '0x3440B06F0C6dE258C8ff79AEab2Db248F28ED368'
+CONTRACT_ADDR = '0x50eA99747f9Dc08caC54708f34AaBE070AF3e391'
 
 
 class W3Facade:
@@ -72,6 +72,30 @@ class W3Facade:
         return True, session.functions.get_string_data(key).call()
 
     @contract_function
+    def get_int_player_data(self, session_id, player_id, key):
+        """Get int player data."""
+        player_addr = (self.session_handler.functions
+                            .get_player_in_session(session_id, player_id)
+                            .call())
+        player = self.w3.eth.contract(
+                address=player_addr,
+                abi=self.player_abi
+        )
+        return True, player.functions.get_int_data(key).call()
+
+    @contract_function
+    def get_string_player_data(self, session_id, player_id, key):
+        """Get int player data."""
+        player_addr = (self.session_handler.functions
+                            .get_player_in_session(session_id, player_id)
+                            .call())
+        player = self.w3.eth.contract(
+                address=player_addr,
+                abi=self.player_abi
+        )
+        return True, player.functions.get_string_data(key).call()
+
+    @contract_function
     def put_int_session_data(self, session_id, key, data):
         """Put int session data."""
         success, session = self.get_session(session_id, handle_exception=False)
@@ -91,6 +115,40 @@ class W3Facade:
         if success is False:
             return False, "Failed to retrieve session."
         session.functions.update_string_data(
+            key, data
+        ).transact({
+            'from': self.account
+        })
+        return True, None
+
+    @contract_function
+    def put_int_player_data(self, player_id, key, data):
+        """Put int player data."""
+        player_addr = (self.session_handler.functions
+                            .get_player(player_id)
+                            .call())
+        player = self.w3.eth.contract(
+                address=player_addr,
+                abi=self.player_abi
+        )
+        player.functions.update_int_data(
+            key, data
+        ).transact({
+            'from': self.account
+        })
+        return True, None
+
+    @contract_function
+    def put_string_player_data(self, player_id, key, data):
+        """Put int player data."""
+        player_addr = (self.session_handler.functions
+                            .get_player(player_id)
+                            .call())
+        player = self.w3.eth.contract(
+                address=player_addr,
+                abi=self.player_abi
+        )
+        player.functions.update_string_data(
             key, data
         ).transact({
             'from': self.account
@@ -155,6 +213,22 @@ class W3Facade:
         ).transact({'from': self.account})
         return True, None
 
+    @contract_function
+    def put_validate_and_update_player_int_data(self, session_id, player_id, key, data):
+        """Put player int data while validating."""
+        self.anticheat.functions.validate_and_update_player_int_data(
+            session_id, player_id, key, data
+        ).transact({'from': self.account})
+        return True, None
+
+    @contract_function
+    def put_validate_and_update_player_string_data(self, session_id, player_id, key, data):
+        """Put player string data while validating."""
+        self.anticheat.functions.validate_and_update_player_string_data(
+            session_id, player_id, key, data
+        ).transact({'from': self.account})
+        return True, None
+
     def get_session(self, session_id, handle_exception=True):
         """Get Session contract."""
         try:
@@ -192,12 +266,3 @@ class W3Facade:
             address=player_addr,
             abi=self.player_abi
         )
-
-    @contract_function
-    def get_player_position(self, session_id, player_id):
-        """Get Player position."""
-        success, player = self.get_player_in_session(session_id, player_id)
-        # success, player = self.get_player(player_id)
-        if success is False:
-            return False, str("Failed to retrieve player.")
-        return True, player.functions.get_position().call()

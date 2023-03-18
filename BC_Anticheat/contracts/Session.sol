@@ -48,7 +48,8 @@ contract Session is DataHandler {
     }
 
     function is_player_active(address player_addr) public view returns(bool) {
-        return get_player_state(player_addr) == PlayerState.Active;
+        PlayerState state = get_player_state(player_addr);
+        return state == PlayerState.Active && state != PlayerState.Default;
     }
 
     function start() public {
