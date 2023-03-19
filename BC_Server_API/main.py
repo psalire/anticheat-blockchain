@@ -1,7 +1,7 @@
 """Anti-cheat blockchain Server API."""
 from uuid import uuid4
 from W3Facade import W3Facade
-from fastapi import FastAPI, Response, WebSocket
+from fastapi import FastAPI, Response, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from typing import Literal
 from ResponseModels import SuccessResponseModel, ErrorResponseModel
@@ -118,22 +118,23 @@ async def ws_endpoint(websocket: WebSocket):
                         ws_req.msg['session_id'],
                         ws_req.msg['data_type'],
                         ws_req.msg['key'],
-                        PutSessionData(ws_req.msg['data']),
+                        PutSessionData(data=ws_req.msg['data']),
                     )
                 elif ws_req.action == 'put_validate_and_update_player_data':
+                    print(ws_req.msg['data'])
                     fun = lambda: put_validate_and_update_player_data(
                         ws_req.msg['session_id'],
                         ws_req.msg['player_id'],
                         ws_req.msg['data_type'],
                         ws_req.msg['key'],
-                        PutSessionData(ws_req.msg['data']),
+                        PutSessionData(data=ws_req.msg['data']),
                     )
                 elif ws_req.action == 'get_session_data_validation_rules':
                     fun = lambda: get_session_data_validation_rules(
                         ws_req.msg['session_id'],
                         ws_req.msg['data_type'],
                         ws_req.msg['key'],
-                        PutSessionData(ws_req.msg['data']),
+                        PutSessionData(data=ws_req.msg['data']),
                     )
                 elif ws_req.action == 'get_player':
                     fun = lambda: get_player(
@@ -143,13 +144,16 @@ async def ws_endpoint(websocket: WebSocket):
                     fun = lambda: ErrorResponseModel(error="Unknown action")
             else:
                 fun = lambda: ErrorResponseModel(error="Invalid input")
+        except WebSocketDisconnect:
+            return
         except Exception as err:
             print(err)
             fun = lambda: ErrorResponseModel(error="Exception")
         if fun:
-            await websocket.send_json(
-                dict(fun())
-            )
+            ret = fun()
+            print(dir(websocket))
+            if ret.data:
+                await websocket.send_json(dict(ret))
 
 
 @app.websocket("/session/{session_id}")
@@ -239,7 +243,9 @@ def post_player_to_session_random(session_id: str, response: Response=None):
             error=msg
         )
 
-    return SuccessResponseModel(data=msg)
+    return SuccessResponseModel(data={
+        'player_id': player_id,
+    })
 
 
 @app.put("/session/{session_id}/data/{data_type}/{key}")
