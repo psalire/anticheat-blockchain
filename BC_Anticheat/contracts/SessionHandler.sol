@@ -36,7 +36,7 @@ contract SessionHandler {
 
     function get_player_in_session(string memory session_id, string memory player_id) public view returns (address) {
         Session session = Session(get_session(session_id));
-        address player_addr = players[player_id];
+        address player_addr = get_player(player_id);
         if (!session.is_player_active(player_addr)) {
             revert("Player not Active");
         }

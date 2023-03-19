@@ -4,7 +4,7 @@ import json
 from web3 import Web3
 from web3.exceptions import ContractLogicError
 
-CONTRACT_ADDR = '0x50eA99747f9Dc08caC54708f34AaBE070AF3e391'
+CONTRACT_ADDR = '0x84018a653d3A94Fee778B6C5e71a157E1ddf7602'
 
 
 class W3Facade:
@@ -32,6 +32,7 @@ class W3Facade:
         self.account = self.w3.eth.accounts[0]
 
     def contract_function(fun):
+        """Decorator to catch ContractLogicError."""
         def wrapper(*args, **kwargs):
             try:
                 return fun(*args, **kwargs)

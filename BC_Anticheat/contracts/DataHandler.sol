@@ -38,20 +38,20 @@ contract DataHandler {
     }
 
     function get_int_data(string memory key) public view returns (int[] memory) {
-        // int[] memory data = int_data[key];
-        // if (data.length == 0) {
-        //     revert("Key DNE");
-        // }
-        // return data;
-        return int_data[key];
+        int[] memory data = int_data[key];
+        if (data.length == 0) {
+            revert("Key DNE");
+        }
+        return data;
+        // return int_data[key];
     }
     function get_string_data(string memory key) public view returns (string[] memory) {
-        // string[] memory data = string_data[key];
-        // if (data.length == 0) {
-        //     revert("Key DNE");
-        // }
-        // return data;
-        return string_data[key];
+        string[] memory data = string_data[key];
+        if (data.length == 0) {
+            revert("Key DNE");
+        }
+        return data;
+        // return string_data[key];
     }
     function get_int_validation_rules(string memory key) public view
     returns (ValidationRulesLib.IntValidationRule[] memory) {

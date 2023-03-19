@@ -65,6 +65,9 @@ contract AntiCheat {
         string memory key,
         string[] memory data
     ) public {
+        if (data.length == 0) {
+            revert("Data is empty");
+        }
         Session session = Session(session_handler.get_session(session_id));
         address player_addr = session_handler.get_player_in_session(session_id, player_id);
         if (!ValidationLib.validate_string(
