@@ -1,5 +1,5 @@
 """pydantic Response Models."""
-from typing import Literal, Any
+from typing import Any, Literal, Union, Optional
 from pydantic import BaseModel
 
 
@@ -21,3 +21,9 @@ class ErrorResponseModel(ResponseModel):
 
     status: Literal['error'] = 'error'
     error: str = 'Failure'
+
+class WSResponseModel(BaseModel):
+    """Websocket Response model."""
+
+    action: str
+    response: Optional[Union[dict, SuccessResponseModel, ErrorResponseModel]]

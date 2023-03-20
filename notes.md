@@ -18,3 +18,7 @@
     - Defining Game Actions, which map to defining smart contract functions
     - Querying player status e.g. is banned or not?
     - Ending game session
+	
+- throttle http based api
+- compare to ws performance
+- Jsend api

@@ -4,15 +4,14 @@ const WebSocket = require('ws');
 class Anticheat {
   constructor() {
     this.ws = new WebSocket(Constants.ANTICHEAT_API_URL.WS);
-    this.makeRequestBody = (action, msg) => JSON.stringify({
+    this.makeWsRequest = (action, msg) => JSON.stringify({
       action,
       msg,
     });
   }
 
-
   wsAddPlayerToSession(sessionId, playerId) {
-    this.ws.send(this.makeRequestBody(
+    this.ws.send(this.makeWsRequest(
       'post_player_to_session',
       {
         session_id: sessionId,
@@ -22,7 +21,7 @@ class Anticheat {
   }
 
   wsAddPlayerData(sessionId, playerId, dataType, key, data) {
-    this.ws.send(this.makeRequestBody(
+    this.ws.send(this.makeWsRequest(
       'put_validate_and_update_player_data',
       {
         session_id: sessionId,
@@ -35,7 +34,7 @@ class Anticheat {
   }
 
   wsAddValidationRule(sessionId, dataType, key, data, operand) {
-    this.ws.send(this.makeRequestBody(
+    this.ws.send(this.makeWsRequest(
       'put_session_data_validation_rule',
       {
         session_id: sessionId,
@@ -47,6 +46,26 @@ class Anticheat {
     ));
   }
 
+  wsGetPlayerInSession(sessionId, playerId) {
+    this.ws.send(this.makeWsRequest(
+      'get_player_in_session',
+      {
+        session_id: sessionId,
+        player_id: playerId,
+      },
+    ));
+  }
+
+  static makeHttpRequest(method, data) {
+    return {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data && JSON.stringify(data),
+    };
+  }
+
   static async getVersion() {
     console.log('getVersion()');
     const req = await fetch(`${Constants.ANTICHEAT_API_URL.HTTP}/version`);
@@ -56,9 +75,9 @@ class Anticheat {
   static async addSession() {
     const req = await fetch(
       `${Constants.ANTICHEAT_API_URL.HTTP}/session`,
-      {
-        method: 'POST',
-      },
+      Anticheat.makeHttpRequest(
+        'POST',
+      ),
     );
     return req.json();
   }
@@ -67,43 +86,36 @@ class Anticheat {
     console.log('addPlayerToSession()');
     const req = await fetch(
       `${Constants.ANTICHEAT_API_URL.HTTP}/session/${sessionId}/player/${playerId}`,
-      {
-        method: 'POST',
-      },
+      Anticheat.makeHttpRequest(
+        'POST',
+      ),
     );
     return req.json();
   }
 
   static async addPlayerData(sessionId, playerId, dataType, key, data) {
-    console.log(JSON.stringify({
-      data,
-    }));
     const req = await fetch(
       `${Constants.ANTICHEAT_API_URL.HTTP}/session/${sessionId}/player/${playerId}/data/${dataType}/${key}/validate`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      Anticheat.makeHttpRequest(
+        'PUT',
+        {
           data,
-        }),
-      },
+        },
+      ),
     );
     return req.json();
   }
 
   static async addValidationRule(sessionId, dataType, key, data, operand) {
-    console.log('addValidationRule()');
     const req = await fetch(
       `${Constants.ANTICHEAT_API_URL.HTTP}/session/${sessionId}/rule/${dataType}/${key}`,
-      {
-        method: 'PUT',
-        body: JSON.stringify({
+      Anticheat.makeHttpRequest(
+        'PUT',
+        {
           data,
           operand,
-        }),
-      },
+        },
+      ),
     );
     return req.json();
   }

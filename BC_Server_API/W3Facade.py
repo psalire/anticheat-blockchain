@@ -252,18 +252,16 @@ class W3Facade:
                     #    .session_handler()
                        .get_player(player_id)
                        .call())
-        return True, self.w3.eth.contract(
-            address=player_addr,
-            abi=self.player_abi
-        )
+        return True, player_addr
 
     @contract_function
     def get_player_in_session(self, session_id, player_id):
         """Get Player contract."""
         player_addr = (self.session_handler.functions
-                            .get_player_in_session(session_id, player_id)
-                            .call())
-        return True, self.w3.eth.contract(
-            address=player_addr,
-            abi=self.player_abi
-        )
+                        .get_player_in_session(session_id, player_id)
+                        .call())
+        # return True, self.w3.eth.contract(
+        #     address=player_addr,
+        #     abi=self.player_abi
+        # )
+        return True, player_addr

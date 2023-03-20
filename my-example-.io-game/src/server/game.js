@@ -6,8 +6,48 @@ const applyCollisions = require('./collisions');
 class Game {
   constructor(anticheat) {
     this.anticheat = anticheat;
+    this.anticheat.ws.addEventListener('message', event => {
+      const msg = JSON.parse(event.data);
+      console.log('Received message:', msg);
+      if (Object.hasOwn(msg.response, 'error') &&
+          msg.response.error.includes('Player flagged')) {
+        const socket = this.sockets[msg.response.data.player_id];
+        if (socket) {
+          console.log(`Remove: ${socket.id}`);
+          this.removePlayer(socket);
+        }
+      }
+    });
     Anticheat.addSession().then(data => {
       this.sessionId = data.data.session_id;
+      Anticheat.addValidationRule(
+        this.sessionId,
+        'int',
+        'x',
+        Math.round((Constants.MAP_SIZE - 100) * 100),
+        'gt',
+      );
+      Anticheat.addValidationRule(
+        this.sessionId,
+        'int',
+        'y',
+        Math.round((Constants.MAP_SIZE - 100) * 100),
+        'gt',
+      );
+      Anticheat.addValidationRule(
+        this.sessionId,
+        'int',
+        'x',
+        100,
+        'lt',
+      );
+      Anticheat.addValidationRule(
+        this.sessionId,
+        'int',
+        'y',
+        100,
+        'lt',
+      );
     });
     this.sockets = {};
     this.players = {};

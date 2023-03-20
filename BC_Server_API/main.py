@@ -4,7 +4,7 @@ from W3Facade import W3Facade
 from fastapi import FastAPI, Response, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from typing import Literal
-from ResponseModels import SuccessResponseModel, ErrorResponseModel
+from ResponseModels import SuccessResponseModel, ErrorResponseModel, WSResponseModel
 from RequestModels import PutSessionData, PutSessionDataValidationRule, WSRequest
 import json
 
@@ -62,6 +62,7 @@ async def ws_endpoint(websocket: WebSocket):
             text = await websocket.receive_text()
             if text:
                 data = json.loads(text)
+                print(data['action'])
                 ws_req = WSRequest(
                     action=data['action'],
                     msg=data['msg'] if 'msg' in data else None
@@ -121,7 +122,7 @@ async def ws_endpoint(websocket: WebSocket):
                         PutSessionData(data=ws_req.msg['data']),
                     )
                 elif ws_req.action == 'put_validate_and_update_player_data':
-                    print(ws_req.msg['data'])
+                    print(ws_req)
                     fun = lambda: put_validate_and_update_player_data(
                         ws_req.msg['session_id'],
                         ws_req.msg['player_id'],
@@ -140,6 +141,11 @@ async def ws_endpoint(websocket: WebSocket):
                     fun = lambda: get_player(
                         ws_req.msg['player_id'],
                     )
+                elif ws_req.action == 'get_player_in_session':
+                    fun = lambda: get_player_in_session(
+                        ws_req.msg['session_id'],
+                        ws_req.msg['player_id'],
+                    )
                 else:
                     fun = lambda: ErrorResponseModel(error="Unknown action")
             else:
@@ -151,17 +157,13 @@ async def ws_endpoint(websocket: WebSocket):
             fun = lambda: ErrorResponseModel(error="Exception")
         if fun:
             ret = fun()
-            print(dir(websocket))
-            if ret.data:
-                await websocket.send_json(dict(ret))
-
-
-@app.websocket("/session/{session_id}")
-async def ws_post_session(websocket: WebSocket, session_id: str):
-    await websocket.accept()
-    await websocket.send_json(
-        dict(post_session(session_id, None))
-    )
+            print(ret)
+            if ws_req is not None and (ret.data or hasattr(ret, 'error')):
+                print('SENDING RESPONSE')
+                await websocket.send_json(dict(WSResponseModel(
+                    action=ws_req.action,
+                    response=ret,
+                )))
 
 
 @app.get("/version")
@@ -266,7 +268,12 @@ def put_session_data(
     if success is False:
         if response:
             response.status_code = 400
-        return ErrorResponseModel(error=msg)
+        return ErrorResponseModel(
+            error=msg,
+            data={
+                'session_id': session_id,
+            }
+        )
     return SuccessResponseModel(data=msg)
 
 
@@ -356,7 +363,12 @@ def put_validate_and_update_session_data(
     if success is False:
         if response:
             response.status_code = 400
-        return ErrorResponseModel(error=msg)
+        return ErrorResponseModel(
+            error=msg,
+            data={
+                'session_id': session_id,
+            }
+        )
     return SuccessResponseModel(data=msg)
 
 
@@ -383,7 +395,12 @@ def put_validate_and_update_player_data(
     if success is False:
         if response:
             response.status_code = 400
-        return ErrorResponseModel(error=msg)
+        return ErrorResponseModel(
+            error=msg,
+            data={
+                'player_id': player_id,
+            }
+        )
     return SuccessResponseModel(data=msg)
 
 
@@ -419,10 +436,14 @@ def get_player(player_id: str, response: Response=None):
         if response:
             response.status_code = 400
         return ErrorResponseModel(error=msg)
+    return SuccessResponseModel(data=msg)
 
-    return SuccessResponseModel(
-        data={
-            "player_id": player_id,
-            "address": msg.address,
-        }
-    )
+@app.get("/session/{session_id}/player/{player_id}")
+def get_player_in_session(session_id: str, player_id: str, response: Response=None):
+    """Get Player address in a session."""
+    success, msg = api.get_player_in_session(session_id, player_id)
+    if success is False or not msg:
+        if response:
+            response.status_code = 400
+        return ErrorResponseModel(error=msg)
+    return SuccessResponseModel(data=msg)

@@ -26,5 +26,6 @@ module.exports = Object.freeze({
   ANTICHEAT_API_URL: {
     HTTP: 'http://127.0.0.1:8000',
     WS: 'ws://127.0.0.1:8000/ws',
-  }
+  },
+  ANTICHEAT_REQUEST_INTERVAL: 100,
 });
