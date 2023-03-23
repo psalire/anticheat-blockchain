@@ -22,3 +22,5 @@
 - throttle http based api
 - compare to ws performance
 - Jsend api
+- TODO: Once flagged, delete the contract
+- TODO: Poll rules ready

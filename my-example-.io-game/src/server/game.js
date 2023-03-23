@@ -11,22 +11,39 @@ class Game {
       console.log('Received message:', msg);
       if (Object.hasOwn(msg.response, 'error') &&
           msg.response.error.includes('Player flagged')) {
-        const socket = this.sockets[msg.response.data.player_id];
-        if (socket) {
-          console.log(`Remove: ${socket.id}`);
-          this.removePlayer(socket);
+        this.removePlayerById(msg.response.data.player_id);
+      } else if (msg.action === 'get_player_data') {
+        if (msg.response.val < 0) {
+          this.removePlayerById(msg.response.player_id);
+        } else {
+          this.anticheat.wsAddPlayerData(
+            this.sessionId,
+            msg.response.player_id,
+            'int',
+            'ammo',
+            [msg.response.val - 1],
+          );
         }
       }
     });
-    Anticheat.addSession().then(data => {
+    this.sessionReady = false;
+    Anticheat.addSession().then(async data => {
       this.sessionId = data.data.session_id;
+      do {
+        console.log('waiting for session...');
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise(r => setTimeout(r, 3000)); // sleep 1000
+        // eslint-disable-next-line no-await-in-loop
+        let status = (await Anticheat.getSession(this.sessionId)).status;
+        this.sessionReady = status === 'success';
+      } while (!this.sessionReady);
       Anticheat.addValidationRule(
         this.sessionId,
         'int',
         'x',
         Math.round((Constants.MAP_SIZE - 100) * 100),
         'gt',
-      );
+      ).then(ret => console.log(ret));
       Anticheat.addValidationRule(
         this.sessionId,
         'int',
@@ -46,6 +63,20 @@ class Game {
         'int',
         'y',
         100,
+        'lt',
+      );
+      Anticheat.addValidationRule(
+        this.sessionId,
+        'int',
+        'ammo',
+        0,
+        'lt',
+      );
+      Anticheat.addValidationRule(
+        this.sessionId,
+        'int',
+        'speedboosts',
+        0,
         'lt',
       );
     });
@@ -57,7 +88,12 @@ class Game {
     setInterval(this.update.bind(this), 1000 / 60);
   }
 
-  addPlayer(socket, username) {
+  async addPlayer(socket, username) {
+    while (!this.sessionReady) {
+      // eslint-disable-next-line no-await-in-loop
+      console.log('addPlayer() wait for session...')
+      await new Promise(r => setTimeout(r, 1000)); // sleep 1000
+    }
     this.anticheat.wsAddPlayerToSession(this.sessionId, socket.id);
     this.sockets[socket.id] = socket;
 
@@ -65,11 +101,29 @@ class Game {
     const x = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5);
     const y = Constants.MAP_SIZE * (0.25 + Math.random() * 0.5);
     this.players[socket.id] = new Player(socket.id, username, x, y, this.sessionId, this.anticheat);
+    let playerReady = false;
+    do {
+      console.log('waiting for player...');
+      // eslint-disable-next-line no-await-in-loop
+      await new Promise(r => setTimeout(r, 3000)); // sleep 1000
+      // eslint-disable-next-line no-await-in-loop
+      let status = (await Anticheat.getPlayer(this.sessionId, socket.id)).status;
+      playerReady = status === 'success';
+    } while (!playerReady);
+    this.players[socket.id].setPlayerReady(true);
   }
 
   removePlayer(socket) {
     delete this.sockets[socket.id];
     delete this.players[socket.id];
+  }
+
+  removePlayerById(playerId) {
+    const socket = this.sockets[playerId];
+    if (socket) {
+      console.log(`Remove: ${socket.id}`);
+      this.removePlayer(socket);
+    }
   }
 
   handleInput(socket, dir) {

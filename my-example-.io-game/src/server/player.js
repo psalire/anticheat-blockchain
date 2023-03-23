@@ -14,10 +14,14 @@ class Player extends ObjectClass {
     this.shoot = false;
     this.shot = false;
     this.sessionId = sessionId;
+    this.playerReady = false;
   }
 
   // Returns a newly created bullet, or null.
   update(dt) {
+    if (!this.playerReady) {
+      return;
+    }
     super.update(dt);
 
     // Update score
@@ -30,6 +34,8 @@ class Player extends ObjectClass {
       console.log('send player data');
       this.anticheat.wsAddPlayerData(this.sessionId, this.id, 'int', 'x', [Math.round(this.x * 100)]);
       this.anticheat.wsAddPlayerData(this.sessionId, this.id, 'int', 'y', [Math.round(this.y * 100)]);
+      this.anticheat.wsAddPlayerData(this.sessionId, this.id, 'int', 'ammo', [30]);
+      this.anticheat.wsAddPlayerData(this.sessionId, this.id, 'int', 'speedboosts', [3]);
       this.anticheatInterval = Constants.ANTICHEAT_REQUEST_INTERVAL;
     } else {
       this.anticheatInterval--;
@@ -46,6 +52,10 @@ class Player extends ObjectClass {
     }
 
     return null;
+  }
+
+  setPlayerReady(val) {
+    this.playerReady = val;
   }
 
   takeBulletDamage() {

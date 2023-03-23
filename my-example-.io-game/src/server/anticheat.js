@@ -33,6 +33,18 @@ class Anticheat {
     ));
   }
 
+  wsGetPlayerData(sessionId, playerId, dataType, key) {
+    this.ws.send(this.makeWsRequest(
+      'get_player_data',
+      {
+        session_id: sessionId,
+        player_id: playerId,
+        data_type: dataType,
+        key,
+      },
+    ));
+  }
+
   wsAddValidationRule(sessionId, dataType, key, data, operand) {
     this.ws.send(this.makeWsRequest(
       'put_session_data_validation_rule',
@@ -59,7 +71,7 @@ class Anticheat {
   static makeHttpRequest(method, data) {
     return {
       method,
-      headers: {
+      headers: data && {
         'Content-Type': 'application/json',
       },
       body: data && JSON.stringify(data),
@@ -77,6 +89,26 @@ class Anticheat {
       `${Constants.ANTICHEAT_API_URL.HTTP}/session`,
       Anticheat.makeHttpRequest(
         'POST',
+      ),
+    );
+    return req.json();
+  }
+
+  static async getSession(sessionId) {
+    const req = await fetch(
+      `${Constants.ANTICHEAT_API_URL.HTTP}/session/${sessionId}`,
+      Anticheat.makeHttpRequest(
+        'GET',
+      ),
+    );
+    return req.json();
+  }
+  
+  static async getPlayer(sessionId, playerId) {
+    const req = await fetch(
+      `${Constants.ANTICHEAT_API_URL.HTTP}/session/${sessionId}/player/${playerId}`,
+      Anticheat.makeHttpRequest(
+        'GET',
       ),
     );
     return req.json();

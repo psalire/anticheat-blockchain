@@ -12,6 +12,7 @@ app = FastAPI()
 
 # Initialize Web3 interface to contract
 api = W3Facade('http://127.0.0.1:7545')
+# api = W3Facade('https://sepolia.infura.io/v3/ecf3c126f4c34255ab163d3212017712')
 
 html = """
 <!DOCTYPE html>
@@ -113,6 +114,7 @@ async def ws_endpoint(websocket: WebSocket):
                         ws_req.msg['session_id'],
                         ws_req.msg['data_type'],
                         ws_req.msg['key'],
+                        PutSessionData(data=ws_req.msg['data']),
                     )
                 elif ws_req.action == 'put_validate_and_update_session_data':
                     fun = lambda: put_validate_and_update_session_data(
@@ -312,7 +314,10 @@ def get_player_data(
         if response:
             response.status_code = 400
         return ErrorResponseModel(error=msg)
-    return SuccessResponseModel(data=msg)
+    return SuccessResponseModel(data={
+        'player_id': player_id,
+        'val': msg,
+    })
 
 
 @app.put("/session/{session_id}/rule/{data_type}/{key}")
